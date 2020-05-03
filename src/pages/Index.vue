@@ -12,42 +12,21 @@
           >
             En espera del lanzamiento...
         </q-card-section>
-        <q-card-section class="column">
-          <q-card flat bordered class="bg-grey-1 q-mb-sm"
-            v-for="dado in aTurnoLanzado"
-            :key="dado.Dado" >
-              <q-card-section
-                class="bg-teal-3 text-black text-subtitle1"
-                style="padding: 4px;"
-                align="center"
-                >{{ dado.Dado }}:
-              </q-card-section>
-              <q-card-section class="q-pb-none">
-                <div class="row flex-break">
-                  <div class="col-6">
-                      <p class="text-blue-grey-4" align="center">
-                        Veces: {{dado.Turnos}}
-                      </p>
-                  </div>
-                  <div class="col-6">
-                    <p class="text-orange-10" align="center">
-                       <span class="text-blue-grey-7">Lanzado: </span><span class="text-subtitle2">{{dado.Lanzado}}</span>
-                    </p>
-                  </div>
+        <q-card-section>
+          <div v-for="dado in aTurnoLanzado" :key="dado.Dado" >
+             <div class="row q-mb-md">
+               <div class="col-4 bg-teal-3 text-black text-subtitle2 q-mb-none q-py-sm q-pr-sm vertical-middle" align="right">
+                    {{dado.Dado}} :
+                </div><div class="col-8 bg-orange-2 text-black text-subtitle3 text-bold q-mb-none q-py-sm q-pl-sm vertical-middle" align="left">
+                    {{dado.Accion}}
                 </div>
-                <div class="row q-mb-sx">
-                  <div class="col-12 vertical-middle">
-                    <p class="bg-orange-2 text-black text-subtitle3 text-bold q-mb-none q-py-md vertical-middle" align="center">
-                      {{dado.Accion}}
-                    </p>
-                  </div>
-                </div>
-              </q-card-section>
-          </q-card>
+             </div>
+          </div>
         </q-card-section>
+       
          <q-card-actions >
           <div class="row full-width">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-pr-xs q-py-xs">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-py-xs">
               <q-btn
                 no-caps
                 color="teal"
@@ -58,7 +37,7 @@
               {{aJugadores[jugadorNext] }} 
               </q-btn>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-pl-xs q-py-xs" v-show="playing">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-py-xs" v-show="playing">
               <q-btn
                 no-caps
                 color="purple-3"
@@ -87,17 +66,17 @@ export default {
       jugadorNext:0,
       aJugadores: ["Jugador 1","Jugador 2"],
       aDados: [0,1,2,3,4,5,6,7,8],
-      aNombresDados: ["Acción","Zona","Tiempo","Penitencia","Prenda","Licor","Acción por","Avanzado 1","Besar"],
+      aNombresDados: ["Acción","Zona","Tiempo","Prenda","Licor","Penitencia","Acción por","Experto","Maestro"],
       aConfigDados: [
         ["Lamer/Chupar","Besar","Mordizquear","Acariciar","Acariciar y Besar","Libre"],
         ["Cuello","Oreja","Espalda","Ombligo","Muslo","Libre"],
         ["1 min","5 seg","10 seg","20 seg","30 seg","40 seg"],
-        ["Vuelve a lanzar","Recibe 1","Recibe 2","Coloca 1","Coloca 2","Libre"],
         ["Recupera 1","Pierde 1","Pierde 2","Todos pierden 1","Todos recuperan 1","Recupera 2"],
         ["Libre","Toma 1","Toma 2","Todos toman 1","Todos toman 2","No toma"],
+        ["Vuelve a lanzar","Recibe 1","Recibe 2","Coloca 1","Coloca 2","Libre"],
         ["Todos","Jugador de la derecha","Jugador de la izquierda","2do Jugador de la derecha","2do Jugador de la izquieda","Salvado de las acciones"],
         ["Desnudo(a) hasta siguiente turno","Doble tiempo","Doble prenda","Doble penitencia","Todos desnudos 1 turno","Pasa acción a jugador...",],
-        ["Zona intima","Con lengua","Las nalgas","Recorrer cuerpo (20 seg)","Los pezones","Zona libre (1 min)"]
+        ["Besar zona intima","Beso con lengua","Besar las nalgas","Besar cuerpo (20 seg)","Chupar los pezones","Acción y Zona libre (1 min)"]
       ],
       aTurnoLanzado:[],
       playing: false,

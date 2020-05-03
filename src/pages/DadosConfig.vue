@@ -7,22 +7,50 @@
                     <div class="col-12">
                         <q-select
                             clearable
-                            v-model="aDadotoConfig"
+                            v-model="sDadoConfig"
                             :options="aDados"
                             label="Seleccione el Dado:"
                             transition-show="flip-up"
                             transition-hide="flip-down"
-                            style="width: 450px"
                             outlined 
                             color="blue"  
                             label-color="blue"
-                            :display-value="`${aDadotoConfig ? aDadotoConfig : 'Por favor seleccione el dado'}`"
+                            :display-value="`${sDadoConfig ? sDadoConfig : 'Por favor seleccione el dado'}`"
                             @input="SeleccionoDado"
                             />
                     </div>
                 </div>
             </q-card-section>
             <q-card-section>
+                <div class="row q-mb-md">
+                    <div class="col-12 q-mb-sm q-pr-xs">
+                         <q-input
+                            v-model="NombreDado"
+                            ref="NombreDado"
+                            :rules="[() => !!Nombre3 || 'Dato requerido',
+                                        () => !!Nombre3 && Nombre3.length > 2 || 'Deber ser mayor a 2 caracteres' ]"
+                            lazy-rules
+                            input-style="min-width: 200px"
+                            outlined
+                            class="col"
+                            label="Nombre Dado:"
+                            maxlength="30"
+                            counter
+                            standout
+                            required
+                            autocomplete="off"
+                          >
+                            <template v-slot:append>
+                              <q-icon
+                                v-if="NombreDado"
+                                @click="NombreDado=''"
+                                name="close"
+                                class="cursor-pointer"
+                              />
+                            </template>
+                          </q-input>
+                    </div>
+                </div>
                 <div class="row q-mb-md">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-mb-sm q-pr-xs">
                          <q-input
@@ -206,7 +234,7 @@
             </q-card-section>
             <q-card-actions>
                 <div class="row full-width">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-pr-xs q-py-xs">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-py-xs">
                         <q-btn
                             no-caps
                             color="teal"
@@ -216,7 +244,7 @@
                         > 
                         </q-btn>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-pl-xs q-py-xs">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 q-py-xs">
                         <q-btn
                             no-caps
                             color="purple-3"
@@ -238,9 +266,10 @@ export default {
     name: 'DadosConfig',
     data() {
         return {
-            aDadotoConfig: null,
+            sDadoConfig: null,
             aDados:[],
             aDadosAcciones:[],
+            NombreDado:"",
             Nombre1:"",
             Nombre2:"",
             Nombre3:"",
@@ -260,12 +289,14 @@ export default {
         process(update) {
             if( update) {
                 localStorage.dadosconfig =JSON.stringify(this.aDadosAcciones)
+                localStorage.dadosnombres =JSON.stringify(this.aDados)
             }
             this.$root.$emit("goHome");
         },
         SeleccionoDado() {
-            if( this.aDadotoConfig !== null) {
-                let nDado= this.aDados.indexOf(this.aDadotoConfig)
+            if( this.sDadoConfig !== null) {
+                let nDado= this.aDados.indexOf(this.sDadoConfig)
+                this.NombreDado=this.sDadoConfig;
                 this.Nombre1=this.aDadosAcciones[nDado][0]
                 this.Nombre2=this.aDadosAcciones[nDado][1]
                 this.Nombre3=this.aDadosAcciones[nDado][2]
@@ -279,6 +310,7 @@ export default {
             }
         },
         update() {
+            this.$refs.NombreDado.validate()
             this.$refs.Nombre1.validate()
             this.$refs.Nombre2.validate()
             this.$refs.Nombre3.validate()
@@ -287,14 +319,17 @@ export default {
             this.$refs.Nombre6.validate()
             if( ! ( this.$refs.Nombre1.hasError || this.$refs.Nombre2.hasError
                     || this.$refs.Nombre3.hasError || this.$refs.Nombre4.hasError
-                    || this.$refs.Nombre5.hasError || this.$refs.Nombre6.hasError ) ) { 
+                    || this.$refs.Nombre5.hasError || this.$refs.Nombre6.hasError
+                    || this.$refs.NombreDado.hasError ) ) { 
                         this.aDadosAcciones[this.nPosDado][0]=this.Nombre1
                         this.aDadosAcciones[this.nPosDado][1]=this.Nombre2
                         this.aDadosAcciones[this.nPosDado][2]=this.Nombre3
                         this.aDadosAcciones[this.nPosDado][3]=this.Nombre4
                         this.aDadosAcciones[this.nPosDado][4]=this.Nombre5
                         this.aDadosAcciones[this.nPosDado][5]=this.Nombre6
+                        this.aDados[this.nPosDado]=this.NombreDado
                         this.clear()
+                        this.sDadoConfig= null
             } else {
                 this.$q.notify({
                 message: "Primero debe llenar los datos de todas las caras del dado",
@@ -309,15 +344,17 @@ export default {
             }
         },
         clear() {
-            this.Nombre1=''
-            this.Nombre2=''
-            this.Nombre3=''
-            this.Nombre4=''
-            this.Nombre5=''
-            this.Nombre6=''
-            this.clearvalidatees()
+          this.NombreDado=''
+          this.Nombre1=''
+          this.Nombre2=''
+          this.Nombre3=''
+          this.Nombre4=''
+          this.Nombre5=''
+          this.Nombre6=''
+          this.clearvalidatees()
         },
         clearvalidatees() {
+            this.$refs.NombreDado.resetValidation()
             this.$refs.Nombre1.resetValidation()
             this.$refs.Nombre2.resetValidation()
             this.$refs.Nombre3.resetValidation()
